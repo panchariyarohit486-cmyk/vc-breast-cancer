@@ -22,7 +22,7 @@ data_frame = pd.DataFrame(breast_canser_dataset.data , columns = breast_canser_d
 data_frame['label'] = breast_canser_dataset.target
 
 
-x = data_frame.drop(columns='label',axis = 1)
+x = data_frame.drop(columns='label')
 y = data_frame['label']
 
 

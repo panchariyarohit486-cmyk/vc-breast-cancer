@@ -1,0 +1,96 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/data/data_ingestion.py
+    deps:
+    - path: src/data/data_ingestion.py
+      hash: md5
+      md5: ff23a3fa896da130f74756c37ad9fd27
+      size: 1292
+    params:
+      params.yaml:
+        data_ingestion.random_state: 2
+        data_ingestion.raw_data_path: data/raw
+        data_ingestion.test_size: 0.2
+    outs:
+    - path: data/raw
+      hash: md5
+      md5: 9a00faf7801a7e7d56a713a54b6cc275.dir
+      size: 123017
+      nfiles: 4
+  data_preprocessing:
+    cmd: python src/data/data_preprocessing.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 9a00faf7801a7e7d56a713a54b6cc275.dir
+      size: 123017
+      nfiles: 4
+    - path: src/data/data_preprocessing.py
+      hash: md5
+      md5: 397a681114a791846467c47c7abed9a2
+      size: 5535
+    params:
+      params.yaml:
+        data_preprocessing.epsilon: 1e-06
+        data_preprocessing.processed_data_path: data/processed
+        data_preprocessing.raw_data_path: data/raw
+        data_preprocessing.scaler: standard
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 090da59f2a81650f5dd002123b410210.dir
+      size: 704243
+      nfiles: 5
+  model_building:
+    cmd: python src/model/model_building.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: 090da59f2a81650f5dd002123b410210.dir
+      size: 704243
+      nfiles: 5
+    - path: src/model/model_building.py
+      hash: md5
+      md5: e1f301e7e51475cfd93a403aa9935dfe
+      size: 2105
+    params:
+      params.yaml:
+        model_building.logistic_regression.C: 1.0
+        model_building.logistic_regression.max_iter: 5000
+        model_building.logistic_regression.random_state: 2
+        model_building.logistic_regression.solver: lbfgs
+        model_building.model_dir: models
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: 8068dbe76d9a48407a892b83bcae23e4
+      size: 2641
+  model_evaluation:
+    cmd: python src/model/model_evaluation.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: 090da59f2a81650f5dd002123b410210.dir
+      size: 704243
+      nfiles: 5
+    - path: models/model.pkl
+      hash: md5
+      md5: 8068dbe76d9a48407a892b83bcae23e4
+      size: 2641
+    - path: src/model/model_evaluation.py
+      hash: md5
+      md5: 55954c8b63058d843bfb59d70bbdccbd
+      size: 2802
+    params:
+      params.yaml:
+        model_evaluation.model_path: models/model.pkl
+        model_evaluation.reports_dir: reports
+        model_evaluation.target_names:
+        - malignant
+        - benign
+    outs:
+    - path: reports/metrics.json
+      hash: md5
+      md5: a29a3ed7a54e1dc1a6c49be9418c66df
+      size: 294
