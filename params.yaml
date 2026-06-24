@@ -41,7 +41,8 @@ model_building:
   model_path: models/model.pkl
   algorithm: logistic_regression      # swap to switch models in future
   logistic_regression:
-    C: 1.0
+    #C: 1.0 # in v2 
+    C: 0.5 # in v1
     max_iter: 5000
     random_state: 2
     solver: lbfgs                     # options: lbfgs | liblinear | saga | sag

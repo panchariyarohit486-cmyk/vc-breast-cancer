@@ -56,7 +56,7 @@ stages:
       size: 2105
     params:
       params.yaml:
-        model_building.logistic_regression.C: 1.0
+        model_building.logistic_regression.C: 0.5
         model_building.logistic_regression.max_iter: 5000
         model_building.logistic_regression.random_state: 2
         model_building.logistic_regression.solver: lbfgs
@@ -64,7 +64,7 @@ stages:
     outs:
     - path: models/model.pkl
       hash: md5
-      md5: 8068dbe76d9a48407a892b83bcae23e4
+      md5: c35508695704678bc7405d5f46fa93d7
       size: 2641
   model_evaluation:
     cmd: python src/model/model_evaluation.py
@@ -76,7 +76,7 @@ stages:
       nfiles: 5
     - path: models/model.pkl
       hash: md5
-      md5: 8068dbe76d9a48407a892b83bcae23e4
+      md5: c35508695704678bc7405d5f46fa93d7
       size: 2641
     - path: src/model/model_evaluation.py
       hash: md5
@@ -92,5 +92,5 @@ stages:
     outs:
     - path: reports/metrics.json
       hash: md5
-      md5: a29a3ed7a54e1dc1a6c49be9418c66df
-      size: 294
+      md5: ae8cf305f65540efb51f6c9978c0b344
+      size: 293
