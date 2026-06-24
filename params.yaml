@@ -1,0 +1,57 @@
+# params.yaml
+# Central parameter file for the breast cancer DVC pipeline.
+
+
+#data_ingestion
+data_ingestion:
+  test_size: 0.2
+  random_state: 2
+  raw_data_path: data/raw
+
+#data_preprocessing 
+data_preprocessing:
+  raw_data_path: data/raw
+  processed_data_path: data/processed
+  scaler: standard                    # options: standard | minmax | robust
+  epsilon: 1.0e-6                     # small constant to avoid divide-by-zero
+  engineered_features:
+    base_features:
+      - radius
+      - texture
+      - perimeter
+      - area
+      - smoothness
+      - compactness
+      - concavity
+      - concave points
+      - symmetry
+      - fractal dimension
+    ratios:
+      worst_to_mean: true             # adds <feat>_worst_to_mean_ratio columns
+      worst_mean_diff: true           # adds <feat>_worst_mean_diff columns
+      coefficient_of_variation: true  # adds <feat>_cv columns
+    shape_indices:
+      mean_shape_index: true          # mean_perimeter² / mean_area
+      worst_shape_index: true         # worst_perimeter² / worst_area
+
+#model_building
+model_building:
+  processed_data_path: data/processed
+  model_dir: models
+  model_path: models/model.pkl
+  algorithm: logistic_regression      # swap to switch models in future
+  logistic_regression:
+    C: 1.0
+    max_iter: 5000
+    random_state: 2
+    solver: lbfgs                     # options: lbfgs | liblinear | saga | sag
+
+#model_evaluation 
+model_evaluation:
+  processed_data_path: data/processed
+  model_path: models/model.pkl
+  reports_dir: reports
+  metrics_path: reports/metrics.json
+  target_names:
+    - malignant                       # label 0
+    - benign                          # label 1
