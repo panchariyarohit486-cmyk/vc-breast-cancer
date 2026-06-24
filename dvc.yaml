@@ -1,0 +1,50 @@
+stages:
+  data_ingestion:
+    cmd: python src/data_ingestion.py
+    deps:
+      - src/data_ingestion.py
+    params:
+      - data_ingestion.test_size
+      - data_ingestion.random_state
+      - data_ingestion.raw_data_path
+    outs:
+      - data/raw
+
+  data_preprocessing:
+    cmd: python src/data_preprocessing.py
+    deps:
+      - src/data_preprocessing.py
+      - data/raw
+    params:
+      - data_preprocessing.raw_data_path
+      - data_preprocessing.processed_data_path
+      - data_preprocessing.epsilon
+    outs:
+      - data/processed
+
+  model_building:
+    cmd: python src/model_building.py
+    deps:
+      - src/model_building.py
+      - data/processed
+    params:
+      - model_building.logistic_regression.C
+      - model_building.logistic_regression.max_iter
+      - model_building.logistic_regression.random_state
+      - model_building.logistic_regression.solver
+      - model_building.model_dir
+    outs:
+      - models/model.pkl
+
+  model_evaluation:
+    cmd: python src/model_evaluation.py
+    deps:
+      - src/model_evaluation.py
+      - models/model.pkl
+    params:
+      - model_evaluation.model_path
+      - model_evaluation.reports_dir
+      - model_evaluation.target_names
+    metrics:
+      - reports/metrics.json:
+           
